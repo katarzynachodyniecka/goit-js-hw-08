@@ -22,4 +22,4 @@ const updateTime = throttle(
 //
 // Dodaj do projektu bibliotekę lodash.throttle i zrób tak, aby czas odtwarzania aktualizował się w storage nie częściej niż raz na sekundę.
 player.setCurrentTime(localStorage.getItem(timeCurr));
-player.on("timeupdate", updateTime);
+player.on("timeCurr", updateTime);
