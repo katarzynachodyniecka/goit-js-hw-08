@@ -1,11 +1,42 @@
-// Śledź w formularzu zdarzenie input, i za każdym razem zapisuj w local storage obiekt z polami email i message, w których przechowywane są aktualne wartości pól formularza.
-//Niech kluczem do tych danych w storage będzie "feedback-form-state".
-//
-//
-// Podczas przeładowywania strony sprawdzaj stan storage i jeśli są tam zapisane dane, wypełniaj nimi pola formularza. W przeciwnym wypadku pola powinny być puste.
-//
-//
-// Po wysłaniu formularza wyczyść storage i pola formularza, a także wyloguj obiekt z polami email, message i ich aktualnymi wartościami do konsoli.
-//
-//
-// Zrób tak, aby storage aktualizował się nie częściej niż raz na 500 milisekund. Aby to zrobić, użyj metody biblioteki lodash.throttle (dodaj ją do projektu).
+import _, { throttle } from "lodash";
+
+const form = document.querySelector("form");
+const emailEl = document.querySelector('input[name="email"]');
+const messageEl = document.querySelector('textarea[name="message"]');
+
+const savedData = JSON.parse(localStorage.getItem("feedback-form-state"));
+
+const data = {
+  email: "",
+  message: "",
+};
+
+const saveData = () => {
+  data.email = emailEl.value;
+  data.message = messageEl.value;
+
+  localStorage.setItem("feedback-form-state", JSON.stringify(data));
+};
+
+const updateData = () => {
+  if (savedData) {
+    emailEl.value = savedData.email;
+    messageEl.value = savedData.message;
+    data.email = savedData.email;
+    data.message = savedData.message;
+  } else {
+    emailEl.value = "";
+    messageEl.value = "";
+  }
+};
+
+const clearData = (e) => {
+  e.preventDefault();
+  console.log(data);
+  form.reset();
+  localStorage.clear();
+};
+
+updateData();
+form.addEventListener("input", throttle(saveData, 500));
+form.addEventListener("submit", clearData);
